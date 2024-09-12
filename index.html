@@ -34,46 +34,48 @@
             font-size: 18px;
         }
 
-        .choices {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
+        .input-container, .choices {
             margin: 20px 0;
         }
 
-        .choice-button {
+        .choice-button, .submit-button {
             padding: 10px 20px;
             font-size: 16px;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        .hint, .error, .success {
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+        .image-container {
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .hidden-clue {
+            display: none;
+            color: blue;
             cursor: pointer;
         }
 
         .hint {
             color: #666;
-            margin-top: 10px;
-            font-size: 14px;
-        }
-
-        .progress {
-            margin-top: 20px;
-            font-size: 16px;
-            color: #333;
-        }
-
-        .image-container {
-            margin: 20px 0;
-        }
-
-        .success {
-            color: green;
-            margin-top: 20px;
         }
 
         .error {
             color: red;
-            margin-top: 20px;
         }
 
-        .hint {
+        .success {
+            color: green;
+        }
+
+        .timer {
+            font-size: 18px;
+            color: red;
             margin-top: 15px;
         }
     </style>
@@ -81,21 +83,20 @@
 <body>
     <div class="container">
         <h1>Career Escape Room</h1>
-        <p>Complete fun challenges related to different careers to escape each room and learn something new!</p>
+        <p>Solve each room's challenges to unlock clues and escape. Be quick, as the clock is ticking!</p>
 
         <!-- Room 1: Healthcare Room -->
         <div id="room1" class="room active">
             <h2>Room 1: Healthcare</h2>
             <div class="image-container">
-                <img src="https://via.placeholder.com/300x200" alt="Doctor and Patient">
+                <img src="https://via.placeholder.com/300x200" alt="Hospital Room" onclick="revealClue('clue1')">
+                <p id="clue1" class="hidden-clue">Hidden Clue: What is the first letter of 'Heart'? (H)</p>
             </div>
-            <p class="question">A doctor needs to find a patient's pulse. Which body part should they check?</p>
-            <div class="choices">
-                <button class="choice-button" onclick="checkAnswer('room1', 'wrist', 'room2')">Wrist</button>
-                <button class="choice-button" onclick="checkAnswer('room1', 'elbow', 'room2')">Elbow</button>
-                <button class="choice-button" onclick="checkAnswer('room1', 'knee', 'room2')">Knee</button>
+            <p class="question">Find the hidden clue and enter the correct letter to proceed!</p>
+            <div class="input-container">
+                <input type="text" id="answer1" placeholder="Enter the letter here...">
+                <button class="submit-button" onclick="checkCombination('room1', 'H', 'answer1', 'room2')">Submit</button>
             </div>
-            <p class="hint">Hint: You can also wear a watch here!</p>
             <p class="error" id="error1"></p>
         </div>
 
@@ -103,63 +104,76 @@
         <div id="room2" class="room">
             <h2>Room 2: Technology</h2>
             <div class="image-container">
-                <img src="https://via.placeholder.com/300x200" alt="Computer Coding">
+                <img src="https://via.placeholder.com/300x200" alt="Computer Desk">
+                <p>Click around the desk to find the clue for the code!</p>
+                <p class="hidden-clue" id="clue2">The code is the year HTML was first introduced (1993).</p>
             </div>
-            <p class="question">What does HTML stand for in web development?</p>
-            <div class="choices">
-                <button class="choice-button" onclick="checkAnswer('room2', 'hypertext markup language', 'room3')">Hypertext Markup Language</button>
-                <button class="choice-button" onclick="checkAnswer('room2', 'high-tech main logic', 'room3')">High-Tech Main Logic</button>
-                <button class="choice-button" onclick="checkAnswer('room2', 'home tool markup language', 'room3')">Home Tool Markup Language</button>
+            <p class="question">What year was HTML first introduced?</p>
+            <div class="input-container">
+                <input type="text" id="answer2" placeholder="Enter the year...">
+                <button class="submit-button" onclick="checkCombination('room2', '1993', 'answer2', 'room3')">Submit</button>
             </div>
-            <p class="hint">Hint: It's the backbone of most web pages!</p>
+            <p class="hint">Hint: Look closely around the desk!</p>
             <p class="error" id="error2"></p>
         </div>
 
-        <!-- Room 3: Arts Room -->
+        <!-- Room 3: Science Lab Room -->
         <div id="room3" class="room">
-            <h2>Room 3: Arts</h2>
+            <h2>Room 3: Science Lab</h2>
             <div class="image-container">
-                <img src="https://via.placeholder.com/300x200" alt="Art Supplies">
+                <img src="https://via.placeholder.com/300x200" alt="Science Lab">
+                <p>Combine the right chemicals to reveal the hidden number!</p>
             </div>
-            <p class="question">What primary colors do you need to mix to get green?</p>
-            <div class="choices">
-                <button class="choice-button" onclick="checkAnswer('room3', 'blue and yellow', 'finish')">Blue and Yellow</button>
-                <button class="choice-button" onclick="checkAnswer('room3', 'red and blue', 'finish')">Red and Blue</button>
-                <button class="choice-button" onclick="checkAnswer('room3', 'red and yellow', 'finish')">Red and Yellow</button>
+            <p class="question">What number is formed when you mix red and blue?</p>
+            <div class="input-container">
+                <input type="text" id="answer3" placeholder="Enter the number...">
+                <button class="submit-button" onclick="checkCombination('room3', '7', 'answer3', 'finish')">Submit</button>
             </div>
-            <p class="hint">Hint: Think of a sunny sky!</p>
+            <p class="hint">Hint: Think of pH scale colors!</p>
             <p class="error" id="error3"></p>
         </div>
 
         <!-- Escape Success -->
         <div id="finish" class="room">
             <h2>Congratulations!</h2>
-            <p class="success">You've successfully escaped all the rooms and learned about different career fields!</p>
+            <p class="success">You've successfully escaped all the rooms! You are now an expert at finding clues and solving problems related to different career fields.</p>
         </div>
 
-        <div class="progress">
-            <p>Rooms Completed: <span id="progressTracker">0</span> / 3</p>
-        </div>
+        <div class="timer" id="timer">Time Left: <span id="timeLeft">180</span> seconds</div>
     </div>
 
     <script>
         let roomsCompleted = 0;
+        let timeLeft = 180; // 3 minutes timer
 
-        function checkAnswer(currentRoom, correctAnswer, nextRoom) {
-            const roomElement = document.getElementById(currentRoom);
-            const errorMsg = roomElement.querySelector('.error');
+        // Timer function
+        const timerInterval = setInterval(function() {
+            timeLeft--;
+            document.getElementById("timeLeft").textContent = timeLeft;
+
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                alert("Time's up! Try again.");
+                location.reload(); // Restart the game
+            }
+        }, 1000);
+
+        // Function to reveal hidden clues
+        function revealClue(clueId) {
+            document.getElementById(clueId).style.display = 'block';
+        }
+
+        // Function to check combination lock answers
+        function checkCombination(currentRoom, correctAnswer, inputId, nextRoom) {
+            const userAnswer = document.getElementById(inputId).value.toUpperCase().trim();
+            const errorMsg = document.getElementById('error' + inputId.charAt(inputId.length - 1));
             
-            // Using button text to compare with the correct answer
-            const selectedAnswer = event.target.textContent.toLowerCase().trim();
-            
-            if (selectedAnswer === correctAnswer.toLowerCase()) {
-                roomsCompleted++;
-                document.getElementById("progressTracker").textContent = roomsCompleted; // Update progress
-                roomElement.classList.remove('active');
+            if (userAnswer === correctAnswer.toUpperCase()) {
+                document.getElementById(currentRoom).classList.remove('active');
                 document.getElementById(nextRoom).classList.add('active');
                 errorMsg.textContent = ''; // Clear any previous error
             } else {
-                errorMsg.textContent = 'Oops! That’s not quite right. Try again!';
+                errorMsg.textContent = 'Incorrect answer. Try again!';
             }
         }
     </script>
