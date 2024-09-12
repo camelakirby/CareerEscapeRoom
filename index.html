@@ -38,7 +38,7 @@
             margin: 20px 0;
         }
 
-        .choice-button, .submit-button {
+        .choice-button, .submit-button, .drag-item {
             padding: 10px 20px;
             font-size: 16px;
             cursor: pointer;
@@ -77,6 +77,16 @@
             font-size: 18px;
             color: red;
             margin-top: 15px;
+        }
+
+        .dropzone {
+            width: 150px;
+            height: 50px;
+            border: 2px dashed #aaa;
+            margin: 10px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
     </style>
 </head>
@@ -122,13 +132,16 @@
             <h2>Room 3: Science Lab</h2>
             <div class="image-container">
                 <img src="https://via.placeholder.com/300x200" alt="Science Lab">
-                <p>Combine the right chemicals to reveal the hidden number!</p>
+                <p>Drag the correct chemical bottles into the drop zone to form the number 7!</p>
+                <div class="dropzone" id="dropzone1"></div>
+                <div class="choices">
+                    <button class="drag-item" draggable="true" ondragstart="drag(event)" id="red">Red</button>
+                    <button class="drag-item" draggable="true" ondragstart="drag(event)" id="blue">Blue</button>
+                    <button class="drag-item" draggable="true" ondragstart="drag(event)" id="green">Green</button>
+                </div>
             </div>
             <p class="question">What number is formed when you mix red and blue?</p>
-            <div class="input-container">
-                <input type="text" id="answer3" placeholder="Enter the number...">
-                <button class="submit-button" onclick="checkCombination('room3', '7', 'answer3', 'finish')">Submit</button>
-            </div>
+            <button class="submit-button" onclick="checkDragAndDrop('room3', 'redblue', 'dropzone1', 'finish')">Submit</button>
             <p class="hint">Hint: Think of pH scale colors!</p>
             <p class="error" id="error3"></p>
         </div>
@@ -141,6 +154,11 @@
 
         <div class="timer" id="timer">Time Left: <span id="timeLeft">180</span> seconds</div>
     </div>
+
+    <!-- Sound Effects -->
+    <audio id="clickSound" src="https://www.soundjay.com/button/beep-07.wav" preload="auto"></audio>
+    <audio id="successSound" src="https://www.soundjay.com/button/sounds/button-3.mp3" preload="auto"></audio>
+    <audio id="errorSound" src="https://www.soundjay.com/button/beep-10.wav" preload="auto"></audio>
 
     <script>
         let roomsCompleted = 0;
@@ -161,6 +179,7 @@
         // Function to reveal hidden clues
         function revealClue(clueId) {
             document.getElementById(clueId).style.display = 'block';
+            playSound('clickSound');
         }
 
         // Function to check combination lock answers
@@ -169,12 +188,51 @@
             const errorMsg = document.getElementById('error' + inputId.charAt(inputId.length - 1));
             
             if (userAnswer === correctAnswer.toUpperCase()) {
+                playSound('successSound');
                 document.getElementById(currentRoom).classList.remove('active');
                 document.getElementById(nextRoom).classList.add('active');
                 errorMsg.textContent = ''; // Clear any previous error
             } else {
+                playSound('errorSound');
                 errorMsg.textContent = 'Incorrect answer. Try again!';
             }
+        }
+
+        // Drag and Drop Functions
+        function drag(event) {
+            event.dataTransfer.setData("text", event.target.id);
+        }
+
+        function allowDrop(event) {
+            event.preventDefault();
+        }
+
+        document.getElementById("dropzone1").addEventListener("drop", function(event) {
+            event.preventDefault();
+            let data = event.dataTransfer.getData("text");
+            event.target.appendChild(document.getElementById(data));
+        });
+
+        document.getElementById("dropzone1").addEventListener("dragover", allowDrop);
+
+        function checkDragAndDrop(currentRoom, correctCombination, dropzoneId, nextRoom) {
+            const dropzone = document.getElementById(dropzoneId);
+            let items = Array.from(dropzone.children).map(item => item.id).join('');
+            
+            if (items === correctCombination) {
+                playSound('successSound');
+                document.getElementById(currentRoom).classList.remove('active');
+                document.getElementById(nextRoom).classList.add('active');
+                document.getElementById('error3').textContent = ''; // Clear any previous error
+            } else {
+                playSound('errorSound');
+                document.getElementById('error3').textContent = 'Incorrect combination. Try again!';
+            }
+        }
+
+        // Function to play sound
+        function playSound(soundId) {
+            document.getElementById(soundId).play();
         }
     </script>
 </body>
