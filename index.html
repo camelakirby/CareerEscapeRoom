@@ -192,6 +192,8 @@
             const userAnswer = document.getElementById(inputId).value.toUpperCase().trim();
             const errorMsg = document.getElementById('error' + inputId.charAt(inputId.length - 1));
             
+            console.log(`Checking answer in room: ${currentRoom}, User Answer: ${userAnswer}, Correct Answer: ${correctAnswer}`);
+            
             if (userAnswer === correctAnswer.toUpperCase()) {
                 playSound('successSound');
                 document.getElementById(currentRoom).classList.remove('active');
@@ -221,6 +223,8 @@
         function checkDragAndDrop(currentRoom, correctCombination, dropzoneId, nextRoom) {
             const dropzone = document.getElementById(dropzoneId);
             let items = Array.from(dropzone.children).map(item => item.id).join('');
+            
+            console.log(`Checking drag and drop in room: ${currentRoom}, Combination: ${items}, Correct Combination: ${correctCombination}`);
             
             if (items === correctCombination) {
                 playSound('successSound');
