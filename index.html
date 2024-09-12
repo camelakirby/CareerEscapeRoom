@@ -55,6 +55,11 @@
             position: relative;
         }
 
+        .image-container img:hover {
+            cursor: pointer;
+            opacity: 0.8;
+        }
+
         .hidden-clue {
             display: none;
             color: blue;
@@ -99,7 +104,7 @@
         <div id="room1" class="room active">
             <h2>Room 1: Healthcare</h2>
             <div class="image-container">
-                <img src="https://via.placeholder.com/300x200" alt="Hospital Room" onclick="revealClue('clue1')">
+                <img src="path-to-hospital-room-image.jpg" alt="Hospital Room" onclick="revealClue('clue1')">
                 <p id="clue1" class="hidden-clue">Hidden Clue: What is the first letter of 'Heart'? (H)</p>
             </div>
             <p class="question">Find the hidden clue and enter the correct letter to proceed!</p>
@@ -114,7 +119,7 @@
         <div id="room2" class="room">
             <h2>Room 2: Technology</h2>
             <div class="image-container">
-                <img src="https://via.placeholder.com/300x200" alt="Computer Desk">
+                <img src="path-to-technology-room-image.jpg" alt="Computer Desk" onclick="revealClue('clue2')">
                 <p>Click around the desk to find the clue for the code!</p>
                 <p class="hidden-clue" id="clue2">The code is the year HTML was first introduced (1993).</p>
             </div>
@@ -131,9 +136,9 @@
         <div id="room3" class="room">
             <h2>Room 3: Science Lab</h2>
             <div class="image-container">
-                <img src="https://via.placeholder.com/300x200" alt="Science Lab">
+                <img src="path-to-science-lab-image.jpg" alt="Science Lab">
                 <p>Drag the correct chemical bottles into the drop zone to form the number 7!</p>
-                <div class="dropzone" id="dropzone1"></div>
+                <div class="dropzone" id="dropzone1" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
                 <div class="choices">
                     <button class="drag-item" draggable="true" ondragstart="drag(event)" id="red">Red</button>
                     <button class="drag-item" draggable="true" ondragstart="drag(event)" id="blue">Blue</button>
@@ -207,13 +212,11 @@
             event.preventDefault();
         }
 
-        document.getElementById("dropzone1").addEventListener("drop", function(event) {
+        function drop(event) {
             event.preventDefault();
             let data = event.dataTransfer.getData("text");
             event.target.appendChild(document.getElementById(data));
-        });
-
-        document.getElementById("dropzone1").addEventListener("dragover", allowDrop);
+        }
 
         function checkDragAndDrop(currentRoom, correctCombination, dropzoneId, nextRoom) {
             const dropzone = document.getElementById(dropzoneId);
@@ -225,15 +228,4 @@
                 document.getElementById(nextRoom).classList.add('active');
                 document.getElementById('error3').textContent = ''; // Clear any previous error
             } else {
-                playSound('errorSound');
-                document.getElementById('error3').textContent = 'Incorrect combination. Try again!';
-            }
-        }
-
-        // Function to play sound
-        function playSound(soundId) {
-            document.getElementById(soundId).play();
-        }
-    </script>
-</body>
-</html>
+               
