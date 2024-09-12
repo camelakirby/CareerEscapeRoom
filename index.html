@@ -103,9 +103,15 @@
         <!-- Room 1: Healthcare Room -->
         <div id="room1" class="room active">
             <h2>Room 1: Healthcare</h2>
-            <div class="image-container">
-                <img src="path-to-hospital-room-image.jpg" alt="Hospital Room" onclick="revealClue('clue1')">
-                <p id="clue1" class="hidden-clue">Hidden Clue: What is the first letter of 'Heart'? (H)</p>
+            <div class="image-container" style="position: relative;">
+                <!-- Ensure the path matches your GitHub repository's folder structure -->
+                <img src="images/hospital-room.jpg" alt="Hospital Room" style="width: 100%; height: auto;" usemap="#hospitalMap">
+                <map name="hospitalMap">
+                    <area shape="rect" coords="100,50,200,150" alt="Bed" onclick="revealClue('clue1')">
+                    <area shape="circle" coords="300,300,50" alt="Stethoscope" onclick="revealClue('clue2')">
+                </map>
+                <p id="clue1" class="hidden-clue" style="position: absolute; top: 20%; left: 30%; color: blue; display: none;">Hidden Clue: What is the first letter of 'Heart'? (H)</p>
+                <p id="clue2" class="hidden-clue" style="position: absolute; top: 50%; left: 60%; color: blue; display: none;">Another clue is found near the stethoscope!</p>
             </div>
             <p class="question">Find the hidden clue and enter the correct letter to proceed!</p>
             <div class="input-container">
@@ -119,7 +125,7 @@
         <div id="room2" class="room">
             <h2>Room 2: Technology</h2>
             <div class="image-container">
-                <img src="path-to-technology-room-image.jpg" alt="Computer Desk" onclick="revealClue('clue2')">
+                <img src="images/technology-room.jpg" alt="Computer Desk" onclick="revealClue('clue2')" style="width: 100%; height: auto;">
                 <p>Click around the desk to find the clue for the code!</p>
                 <p class="hidden-clue" id="clue2">The code is the year HTML was first introduced (1993).</p>
             </div>
@@ -136,7 +142,7 @@
         <div id="room3" class="room">
             <h2>Room 3: Science Lab</h2>
             <div class="image-container">
-                <img src="path-to-science-lab-image.jpg" alt="Science Lab">
+                <img src="images/science-lab.jpg" alt="Science Lab" style="width: 100%; height: auto;">
                 <p>Drag the correct chemical bottles into the drop zone to form the number 7!</p>
                 <div class="dropzone" id="dropzone1" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
                 <div class="choices">
