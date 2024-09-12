@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Career Escape Room</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .room {
+            display: none;
+        }
+
+        .room.active {
+            display: block;
+        }
+
+        .question {
+            margin: 20px 0;
+            font-size: 18px;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            font-size: 16px;
+            width: 60%;
+            margin-bottom: 10px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .hint {
+            color: #666;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        .success {
+            color: green;
+            margin-top: 20px;
+        }
+
+        .error {
+            color: red;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Career Escape Room</h1>
+        <p>Solve puzzles related to different careers to escape from each room!</p>
+
+        <!-- Room 1: Healthcare Room -->
+        <div id="room1" class="room active">
+            <h2>Room 1: Healthcare</h2>
+            <p class="question">To escape this room, answer this: What is the medical term for a heart attack?</p>
+            <input type="text" id="answer1" placeholder="Type your answer here...">
+            <button onclick="checkAnswer('room1', 'myocardial infarction', 'answer1', 'room2')">Submit</button>
+            <p class="hint">Hint: It's a two-word term starting with "M" and "I".</p>
+            <p class="error" id="error1"></p>
+        </div>
+
+        <!-- Room 2: Technology Room -->
+        <div id="room2" class="room">
+            <h2>Room 2: Technology</h2>
+            <p class="question">To escape this room, solve this puzzle: What is the most commonly used programming language for web development?</p>
+            <input type="text" id="answer2" placeholder="Type your answer here...">
+            <button onclick="checkAnswer('room2', 'javascript', 'answer2', 'room3')">Submit</button>
+            <p class="hint">Hint: It's the language that starts with "J".</p>
+            <p class="error" id="error2"></p>
+        </div>
+
+        <!-- Room 3: Finance Room -->
+        <div id="room3" class="room">
+            <h2>Room 3: Finance</h2>
+            <p class="question">To escape this room, answer this: What is the term for the profit made from selling an asset like stock or real estate?</p>
+            <input type="text" id="answer3" placeholder="Type your answer here...">
+            <button onclick="checkAnswer('room3', 'capital gain', 'answer3', 'finish')">Submit</button>
+            <p class="hint">Hint: It's a two-word term starting with "C" and "G".</p>
+            <p class="error" id="error3"></p>
+        </div>
+
+        <!-- Escape Success -->
+        <div id="finish" class="room">
+            <h2>Congratulations!</h2>
+            <p class="success">You've successfully escaped all the rooms and learned about different career fields!</p>
+        </div>
+    </div>
+
+    <script>
+        function checkAnswer(currentRoom, correctAnswer, inputId, nextRoom) {
+            const userAnswer = document.getElementById(inputId).value.toLowerCase().trim();
+            const errorMsg = document.getElementById('error' + inputId.charAt(inputId.length - 1));
+            
+            if (userAnswer === correctAnswer.toLowerCase()) {
+                document.getElementById(currentRoom).classList.remove('active');
+                document.getElementById(nextRoom).classList.add('active');
+            } else {
+                errorMsg.textContent = 'Incorrect answer. Try again!';
+            }
+        }
+    </script>
+</body>
+</html>
