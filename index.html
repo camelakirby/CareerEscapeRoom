@@ -34,24 +34,33 @@
             font-size: 18px;
         }
 
-        input[type="text"] {
-            padding: 10px;
-            font-size: 16px;
-            width: 60%;
-            margin-bottom: 10px;
+        .choices {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 20px 0;
         }
 
-        button {
+        .choice-button {
             padding: 10px 20px;
             font-size: 16px;
             cursor: pointer;
-            margin-top: 10px;
         }
 
         .hint {
             color: #666;
             margin-top: 10px;
             font-size: 14px;
+        }
+
+        .progress {
+            margin-top: 20px;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .image-container {
+            margin: 20px 0;
         }
 
         .success {
@@ -63,40 +72,62 @@
             color: red;
             margin-top: 20px;
         }
+
+        .hint {
+            margin-top: 15px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Career Escape Room</h1>
-        <p>Solve puzzles related to different careers to escape from each room!</p>
+        <p>Complete fun challenges related to different careers to escape each room and learn something new!</p>
 
         <!-- Room 1: Healthcare Room -->
         <div id="room1" class="room active">
             <h2>Room 1: Healthcare</h2>
-            <p class="question">To escape this room, answer this: What is the medical term for a heart attack?</p>
-            <input type="text" id="answer1" placeholder="Type your answer here...">
-            <button onclick="checkAnswer('room1', 'myocardial infarction', 'answer1', 'room2')">Submit</button>
-            <p class="hint">Hint: It's a two-word term starting with "M" and "I".</p>
+            <div class="image-container">
+                <img src="https://via.placeholder.com/300x200" alt="Doctor and Patient">
+            </div>
+            <p class="question">A doctor needs to find a patient's pulse. Which body part should they check?</p>
+            <div class="choices">
+                <button class="choice-button" onclick="checkAnswer('room1', 'wrist', 'room2')">Wrist</button>
+                <button class="choice-button" onclick="checkAnswer('room1', 'elbow', 'room2')">Elbow</button>
+                <button class="choice-button" onclick="checkAnswer('room1', 'knee', 'room2')">Knee</button>
+            </div>
+            <p class="hint">Hint: You can also wear a watch here!</p>
             <p class="error" id="error1"></p>
         </div>
 
         <!-- Room 2: Technology Room -->
         <div id="room2" class="room">
             <h2>Room 2: Technology</h2>
-            <p class="question">To escape this room, solve this puzzle: What is the most commonly used programming language for web development?</p>
-            <input type="text" id="answer2" placeholder="Type your answer here...">
-            <button onclick="checkAnswer('room2', 'javascript', 'answer2', 'room3')">Submit</button>
-            <p class="hint">Hint: It's the language that starts with "J".</p>
+            <div class="image-container">
+                <img src="https://via.placeholder.com/300x200" alt="Computer Coding">
+            </div>
+            <p class="question">What does HTML stand for in web development?</p>
+            <div class="choices">
+                <button class="choice-button" onclick="checkAnswer('room2', 'hypertext markup language', 'room3')">Hypertext Markup Language</button>
+                <button class="choice-button" onclick="checkAnswer('room2', 'high-tech main logic', 'room3')">High-Tech Main Logic</button>
+                <button class="choice-button" onclick="checkAnswer('room2', 'home tool markup language', 'room3')">Home Tool Markup Language</button>
+            </div>
+            <p class="hint">Hint: It's the backbone of most web pages!</p>
             <p class="error" id="error2"></p>
         </div>
 
-        <!-- Room 3: Finance Room -->
+        <!-- Room 3: Arts Room -->
         <div id="room3" class="room">
-            <h2>Room 3: Finance</h2>
-            <p class="question">To escape this room, answer this: What is the term for the profit made from selling an asset like stock or real estate?</p>
-            <input type="text" id="answer3" placeholder="Type your answer here...">
-            <button onclick="checkAnswer('room3', 'capital gain', 'answer3', 'finish')">Submit</button>
-            <p class="hint">Hint: It's a two-word term starting with "C" and "G".</p>
+            <h2>Room 3: Arts</h2>
+            <div class="image-container">
+                <img src="https://via.placeholder.com/300x200" alt="Art Supplies">
+            </div>
+            <p class="question">What primary colors do you need to mix to get green?</p>
+            <div class="choices">
+                <button class="choice-button" onclick="checkAnswer('room3', 'blue and yellow', 'finish')">Blue and Yellow</button>
+                <button class="choice-button" onclick="checkAnswer('room3', 'red and blue', 'finish')">Red and Blue</button>
+                <button class="choice-button" onclick="checkAnswer('room3', 'red and yellow', 'finish')">Red and Yellow</button>
+            </div>
+            <p class="hint">Hint: Think of a sunny sky!</p>
             <p class="error" id="error3"></p>
         </div>
 
@@ -105,18 +136,30 @@
             <h2>Congratulations!</h2>
             <p class="success">You've successfully escaped all the rooms and learned about different career fields!</p>
         </div>
+
+        <div class="progress">
+            <p>Rooms Completed: <span id="progressTracker">0</span> / 3</p>
+        </div>
     </div>
 
     <script>
-        function checkAnswer(currentRoom, correctAnswer, inputId, nextRoom) {
-            const userAnswer = document.getElementById(inputId).value.toLowerCase().trim();
-            const errorMsg = document.getElementById('error' + inputId.charAt(inputId.length - 1));
+        let roomsCompleted = 0;
+
+        function checkAnswer(currentRoom, correctAnswer, nextRoom) {
+            const roomElement = document.getElementById(currentRoom);
+            const errorMsg = roomElement.querySelector('.error');
             
-            if (userAnswer === correctAnswer.toLowerCase()) {
-                document.getElementById(currentRoom).classList.remove('active');
+            // Using button text to compare with the correct answer
+            const selectedAnswer = event.target.textContent.toLowerCase().trim();
+            
+            if (selectedAnswer === correctAnswer.toLowerCase()) {
+                roomsCompleted++;
+                document.getElementById("progressTracker").textContent = roomsCompleted; // Update progress
+                roomElement.classList.remove('active');
                 document.getElementById(nextRoom).classList.add('active');
+                errorMsg.textContent = ''; // Clear any previous error
             } else {
-                errorMsg.textContent = 'Incorrect answer. Try again!';
+                errorMsg.textContent = 'Oops! That’s not quite right. Try again!';
             }
         }
     </script>
